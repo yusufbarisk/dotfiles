@@ -1,0 +1,379 @@
+; vim:ft=dosini
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+
+[colors]
+black = ${xrdb:color0:#1d2021}
+darkred = ${xrdb:color1:#cc241d}
+darkgreen = ${xrdb:color2:#98971a}
+darkyellow = ${xrdb:color3:#d79921}
+darkblue = ${xrdb:color4:#291DFA}
+darkmagenta = ${xrdb:color5:#b16286}
+darkcyan = ${xrdb:color6:#689d6a}
+lightgray = ${xrdb:color7:#a89984}
+gray = ${xrdb:color8:#928374}
+red = ${xrdb:color9:#fb4934}
+green = ${xrdb:color10:#b8bb26}
+yellow = ${xrdb:color11:#fabd2f}
+blue = ${xrdb:color12:#4FD6D0}
+magenta = ${xrdb:color13:#d3869b}
+cyan = ${xrdb:color14:#8ec07c}
+white = ${xrdb:color15:#ebdbb2}
+background = ${xrdb:color256:#1d2021}
+foreground = ${xrdb:color257:#ebdbb2}
+
+[bar/default]
+;monitor = ${env:MONITOR:eDP-1-1}
+monitor = ${env:MONITOR:}
+enable-ipc = true
+width = 100%
+height = 24
+;offset-x = 1%
+;offset-y = 1%
+;radius = 6.0
+fixed-center = true
+
+background = #2f343f
+foreground = #f5f8f6
+
+line-size = 3
+line-color = {$xrdb:red}
+
+border-size = 0
+border-color = ${colors.white}
+
+padding-left = 2
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = Hack:pixelsize=9;1
+font-2 = Inconsolata Nerd Font:size=8;1
+font-1 = Hack:size=8;1
+font-3 = Noto Color Emoji:scale=10:style=Regular;2
+font-4 = Siji:pixelsize=9;1
+
+
+; Other modules: xkeyboard filesystem xbacklight backlight-acpi cpu memory temperature powermenu
+modules-left = i3 spotify
+modules-center = date
+modules-right = volume bluetooth wireless-network wired-network battery cpu memory
+
+tray-position = right
+tray-padding = 1
+
+wm-restack = i3
+
+override-redirect = false
+
+scroll-up = i3-desknext
+scroll-down = i3-deskprev
+
+
+
+[module/xbacklight]
+type = internal/xbacklight
+
+format = <label> <bar>
+label =  %percentage%%
+label-foreground = ${colors.primary}
+
+bar-width = 10
+bar-indicator = |
+bar-indicator-foreground = ${colors.primary}
+bar-indicator-font = 
+bar-fill = ─
+bar-fill-font = 4
+bar-fill-foreground = #9f78e1
+bar-empty = ─
+bar-empty-font = 4
+bar-empty-foreground = ${colors.foreground-alt}
+
+
+
+[module/bluetooth]
+type = custom/script
+label = %output%
+format-prefix = " "
+format-underline = #8E21FA
+format-prefix-foreground = ${colors.foreground}
+exec = python3 ~/.local/bin/bt-stat.py
+
+[module/spotify]
+type = custom/script
+interval = 1
+format-prefix = " "
+format = <label>
+exec = python ~/.local/bin/spotify_status.py -f '{artist}: {song}'
+format-underline = #31A331
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:45:...%
+format-foreground = ${colors.blue}
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+
+format-prefix = " "
+format-prefix-foreground = ${colors.gray}
+format-prefix-underline = ${colors.darkmagenta}
+
+label-layout = %layout%
+label-layout-underline = ${colors.darkmagenta}
+
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.darkmagenta}
+label-indicator-underline = ${colors.darkmagenta}
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+mount-1 = /home
+
+label-mounted-underline = ${colors.cyan}
+label-mounted = /: %percentage_used%%
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.gray}
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+label-padding = 2
+; Only show workspaces on the same output as the bar
+pin-workspaces = true
+
+enable-click = true
+
+ws-icon-0 = 1;♚
+ws-icon-1 = 2;♛
+ws-icon-2 = 3;♜
+ws-icon-3 = 4;♝
+ws-icon-4 = 5;♞
+ws-icon-default = ♟
+
+label-mode-padding = 2
+label-mode-foreground = ${colors.white}
+label-mode-background = ${colors.darkyellow}
+
+; focused = Active workspace on focused monitor
+label-focused = %index%
+label-focused-background = ${colors.black}
+;label-focused-background = ${color.black}
+label-focused-underline = ${colors.blue}
+label-focused-padding = ${self.label-padding}
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %index%
+label-unfocused-padding = ${self.label-padding}
+
+; visible = Active workspace on unfocused monitor
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; urgent = Workspace with urgency hint set
+label-urgent = %index%
+label-urgent-background = ${colors.red}
+label-urgent-padding = ${self.label-padding}
+
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.gray}
+format-underline = ${colors.red}
+label = %percentage%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.gray}
+format-underline = ${colors.darkcyan}
+label = %gb_used%
+
+[module/wired-network]
+type = internal/network
+interface = enp3s0
+interval = 3.0
+format-connected = 直 <label-connected>
+format-connected-underline = ${colors.darkmagenta}
+label-connected = eth %local_ip% 
+
+;format-disconnected =
+format-disconnected = <label-disconnected>
+format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+label-disconnected = 睊no wifi
+label-disconnected-foreground = ${colors.gray}
+
+[module/wireless-network]
+type = internal/network
+interface = wlp2s0
+interval = 3.0
+format-connected = 直 <label-connected>
+format-connected-underline = ${colors.darkmagenta}
+label-connected = wifi %local_ip%
+
+;format-disconnected =
+format-disconnected = <label-disconnected>
+format-disconnected-underline = ${self.format-connected-underline}
+;label-disconnected = %ifname% disconnected
+label-disconnected = 
+label-disconnected-foreground = ${colors.gray}
+
+; <ramp-signal>
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.gray}
+
+
+[module/date]
+type = internal/date
+interval = 60
+
+date = "%Y %b %d (%a)"
+;time-alt = "%I:%M%p"
+-
+# If you're not living in a country where AM and PM is used you can add -alt to the time above this line and comment it using ;, then you can remove the -alt to the time under this line and uncomment it.
+;time-alt = " at %H:%M"
+time = %H:%M 
+;time-alt = %H:%M:%S
+
+format-prefix = 
+;" "
+format-prefix-foreground = ${colors.gray}
+format-underline = ${colors.blue}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/alsa
+
+format-volume = <label-volume> <bar-volume>
+label-volume = 
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.gray} 
+label-muted = Shush
+
+bar-volume-width = 1
+bar-volume-foreground-0 = ${colors.darkblue}
+bar-volume-foreground-1 = ${colors.darkblue}
+bar-volume-foreground-2 = ${colors.darkblue}
+bar-volume-foreground-3 = ${colors.darkblue}
+bar-volume-foreground-4 = ${colors.darkblue}
+bar-volume-foreground-5 = ${colors.darkblue}
+bar-volume-foreground-6 = ${colors.darkblue}
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 0
+bar-volume-fill = =
+bar-volume-fill-font = 0
+bar-volume-empty = =
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.gray}
+
+[module/battery]
+type = internal/battery
+
+; This is useful in case the battery never reports 100% charge
+full-at = 92
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT1
+adapter = ADP1
+
+poll-interval = 5
+format-charging-underline = ${colors.darkyellow}
+format-discharging-underline = ${self.format-charging-underline}
+format-full-prefix = " "
+format-full-underline = #24b703
+label-charging = %percentage%%
+
+label-discharging = %percentage%%
+label-full =. Full .
+
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <ramp> <label>
+format-underline = ${colors.red}
+format-warn = <ramp> <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.darkmagenta}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-3 = 
+ramp-4 = 
+ramp-foreground = ${colors.gray}
+
+[module/powermenu]
+type = custom/menu
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${colors.darkmagenta}
+label-close =  cancel
+label-close-foreground = ${colors.darkmagenta}
+label-separator = |
+label-separator-foreground = ${colors.gray}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = sudo reboot
+
+menu-2-0 = power off
+menu-2-0-exec = sudo poweroff
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
